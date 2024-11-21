@@ -1,7 +1,11 @@
-Controller - Lidar com as requisições HTTP que chegam à API e direcioná-las para as camadas apropriadas. define a lógica de (GET, POST, PUT, DELETE) 
+Controller - Logica das requisicoes http
 
 database - configurações relacionadas ao banco
 
 model - modelo de dados - user, book, review?
 
-repositories - chama as requisições crud (GET, POST, PUT, DELETE)
+repositories - Interações diretas com banco de dados
+
+services - regras de negocio?
+
+constroller recebe param e manda para o service

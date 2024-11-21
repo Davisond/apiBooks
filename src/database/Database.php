@@ -1,20 +1,17 @@
 <?php
 
-  class Database extends PDO
-  {
-	  //NÂO FAÇA ASSIM :-D
-    private string $hostname = "127.0.0.1";
-    private string $username = "root";
-    private string $password = "root";
-    private string $database = "api";
-    
-    function __construct()
-    {
-      $dsn = "mysql:host={$this->hostname};dbname={$this->database}"; 
+require 'vendor/autoload.php'; // Autoloader do Composer para o MongoDB
 
-      parent::__construct($dsn, $this->username, $this->password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-      ]);
+class Database {
+    private $client;
+    private $db;
+
+    public function __construct() {
+        $this->client = new MongoDB\Client("mongodb://127.0.0.1:27017"); // Conexão com o MongoDB
+        $this->db = $this->client->selectDatabase('api'); // Nome do banco de dados
     }
-  }
-?>
+
+    public function getCollection($collectionName) {
+        return $this->db->selectCollection($collectionName); // Retorna uma coleção
+    }
+}
