@@ -26,36 +26,58 @@ private function getById($id) {
     }
 }
 private function create($book) {
-    $body = file_get_contents('php://input');
-    $params = json_decode($body,true);
-    $book = new Book();
-    $book->id = $book::createId();
-    $book->title = $params['title'];
-    $book->author = $params['author'];
-    $book->review = $params['review'];
-    http_response_code(201);
-    echo json_encode($book);
-
-}
-private function update($id) {
-    $body = file_get_contents('php://input');
-    $params = json_decode($body,true);
-    $book = $this->repository->findById($id);
-    if ($book) {
+    try {
+        $body = file_get_contents('php://input');
+        $params = json_decode($body,true);
+            if (!$params || !isset($params['tittle'], $params['author'], $params['review'])) {
+                http_response_code(400);
+                throw new Exception("Dados inválidos. 'title', 'author' e 'review' obrigatórios.");
+    }
+        $book = new Book();
+        $book->id = $book::createId();
         $book->title = $params['title'];
         $book->author = $params['author'];
         $book->review = $params['review'];
+        http_response_code(201);
+        echo json_encode($book);
 
-        $this->repository->update($book);
-        http_response_code(200);
-    } else {
-        http_response_code(404);
-        echo json_encode(["message:"=>"book not finded"]);
+} catch (Exception $e) {
+        http_response_code(400);
+        echo json_encode(["mensagem" => $e->getMessage()]);
     }
 }
+private function update($id)
+{
+    try {
+        $body = file_get_contents('php://input');
+        $params = json_decode($body, true);
+        if (!$params || !isset($params['tittle'], $params['author'], $params['review'])) {
+            http_response_code(400);
+            throw new Exception("Dados inválidos. 'title', 'author' e 'review' são obrigatórios.");
+        }
+        $book = $this->repository->findById($id);
+        if ($book) {
+            $book->title = $params['title'];
+            $book->author = $params['author'];
+            $book->review = $params['review'];
+
+            $this->repository->update($book);
+            http_response_code(200);
+        } else {
+            http_response_code(404);
+            echo json_encode(["message:" => "book not finded"]);
+        }
+    } catch (Exception $e) {
+        http_response_code(400);
+        echo json_encode(["mensagem" => $e->getMessage()]);
+    }
+}
+
 private function delete($id) {
-    $body = file_get_contents('php://input');
-    $params = json_decode($body,true);
+    try {
+        $body = file_get_contents('php://input');
+        $params = json_decode($body,true);
+
     $book = $this->repository->findById($id);
     if ($book) {
         $this->repository->delete($id);
@@ -64,6 +86,10 @@ private function delete($id) {
         http_response_code(404);
         echo json_encode(["message:"=>"book not finded"]);
     }
-}
+} catch (Exception $e) {
+        http_response_code(400);
+        echo json_encode(["mensagem" => $e->getMessage()]);
+    }
+    }
 }
     ?>

@@ -10,6 +10,7 @@ class BookController {
     }
 
     public function processResquest($method, $identifier) {
+        try {
         switch ($method) {
             case 'GET':
                 if ($identifier) {
@@ -38,6 +39,10 @@ class BookController {
                 http_response_code(405);
                 echo json_encode(['error' => 'Method not allowed']);
             }
+        } catch (Exception $ex) {
+            http_response_code(405);
+            echo json_encode(['error' => $ex->getMessage()]);
+        }
 
         }
 

@@ -12,6 +12,7 @@
   
   $method = $_SERVER["REQUEST_METHOD"];
 
+try {
   switch($resource) {
     case "books":
       $bookController = new BookController();
@@ -28,5 +29,8 @@
       http_response_code(404);
       echo json_encode(["mensagem"=>"Recurso não encontrado!"]);
   }
-  
+}catch (Exception $e){
+    http_response_code(500);
+    echo json_encode(["mensagem"=>$e->getMessage()]);
+}
 ?>
