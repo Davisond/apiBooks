@@ -11,5 +11,11 @@ class Book {
         $this->author = $author;
         $this->review = $review;
     }
+    public static function createId() {
+        return uniqid('', true);
+    }
+
+
+
 }
 ?>

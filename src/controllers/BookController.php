@@ -1,50 +1,54 @@
 <?php
 
-require_once('./src/repositories/BookServices.php');
+require_once('./src/services/BookServices.php');
 
 class BookController {
-    private $service;
+    private $services;
 
-    public function __construct() {
-        $this->service = new BookServices();
+    public function __construct()
+    {
+        $this->services = new BookServices();
     }
 
-    public function processResquest($method, $identifier) {
+    public function processResquest($method, $identifier)
+    {
         try {
-        switch ($method) {
-            case 'GET':
-                if ($identifier) {
-                    $books = this->services->getById($identifier);
-                } else {
-                    $books = $this->$service->getAll();
-                    echo json_encode($books);
-
-                }
-            case 'POST':
-                if ($identifier) {
-                    $service->create($identifier);
-                    break;
-                    }
-            case 'PUT':
+            switch ($method) {
+                case 'GET':
                     if ($identifier) {
-                    $service->update($identifier);
-                    break;
+                        $books = $this->services->getById($identifier);
+                    } else {
+                        $books = $this->services->getAll();
+                        echo json_encode($books);
                     }
-            case 'DELETE':
-                 if ($identifier) {
-                     $service->delete($identifier);
                     break;
-                 }
-            default:
-                http_response_code(405);
-                echo json_encode(['error' => 'Method not allowed']);
+                case 'POST':
+                    if (!$identifier) {
+                        $this->services->create();
+                        break;
+                    }
+                case 'PUT':
+                    if ($identifier) {
+                        $data = json_decode(file_get_contents('php://input'), true);
+                        $this->services-> update($identifier,$data);
+                        break;
+                    }
+                case 'DELETE':
+                    if ($identifier) {
+                        $this->services->delete($identifier);
+                        break;
+                    }
+                default:
+                    http_response_code(405);
+                    echo json_encode(['error' => 'Method not allowed']);
             }
         } catch (Exception $ex) {
             http_response_code(405);
             echo json_encode(['error' => $ex->getMessage()]);
         }
 
-        }
-
     }
-    ?>
+
+
+}
+?>

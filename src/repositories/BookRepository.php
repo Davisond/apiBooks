@@ -21,6 +21,32 @@ class BookRepository {
         return $book;
     }
 
+    public function save(Book $book) {
+        $collection = $this->db->getCollection("books");
 
+        $result = $collection->insertOne([
+            'id' => $book->id,
+            'title' => $book->title,
+            'author' => $book->author,
+            'review' => $book->review
+        ]);
+        return $result->getInsertedId();
+    }
+
+    public function delete($id) {
+        $collection = $this->db->getCollection("books");
+        $result = $collection->deleteOne(['id' => $id]);
+        return $result;
+    }
+
+    public function update($id, Book $book) {
+        $collection = $this->db->getCollection("books");
+        $result = $collection->updateOne(
+        ['id' => $id],
+        ['$set' => $book]
+        );
+        return $result;
+    }
 
 }
+?>

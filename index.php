@@ -25,8 +25,7 @@ try {
       require_once("./src/database/prepare_data.php");
       prepareDataBase();
       break;
-    default:
-      http_response_code(404);
+       http_response_code(404);
       echo json_encode(["mensagem"=>"Recurso não encontrado!"]);
   }
 }catch (Exception $e){
